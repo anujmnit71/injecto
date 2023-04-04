@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"io/ioutil"
 	"path"
-
+	"log"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/archive"
@@ -62,7 +61,7 @@ func copyRec(cli *client.Client, dir, container, prefix string, count, totalCopy
 			return 0, err
 		}
 
-		fmt.Printf("copying [%d/%d]: %s\n", count, totalCopyCount, name)
+		log.Printf("copying [%d/%d]: %s\n", count, totalCopyCount, name)
 		if err := cli.CopyToContainer(context.Background(), container, dstDir,
 			preparedArchive, types.CopyToContainerOptions{
 				AllowOverwriteDirWithFile: true,
