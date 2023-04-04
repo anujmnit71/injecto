@@ -5,11 +5,13 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"log"
 
 	"github.com/docker/docker/client"
 )
 
 func main() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	if len(os.Args) != 3 {
 		fmt.Println("Usage: injecto <image> <container>")
 		os.Exit(1)
@@ -20,17 +22,22 @@ func main() {
 
 	cli, err := client.NewEnvClient()
 	if err != nil {
+		log.Println(err)
 		panic(err)
 	}
 
 	dir, err := ioutil.TempDir("", "")
 	if err != nil {
+		log.Println(err)
 		panic(err)
 	}
 	if err := save(cli, dir, image); err != nil {
+		fmt.Printf("copying [%s]: %s\n", dir, image)
+		log.Println(err)
 		panic(err)
 	}
 	if err := copy(cli, dir, container); err != nil {
+		log.Println(err)
 		panic(err)
 	}
 }
